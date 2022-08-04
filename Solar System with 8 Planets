@@ -38,6 +38,7 @@ neptune_w = 1.0884574e-4
 #The radii are VERY not to scale, just there so you can see them
 #Apologies to Jupiter, Uranus, + Neptune for not adding their rings
 #And the light source is all wrong for the shiny spots on the planets
+#And obviously the planets don't start out perfectly aligned on the x-axis, and their orbital planes are inclined, but I kept it this way for ease of viewing
 #Bodies
 sun = sphere(pos=vector(0,0,0), radius = 15e9, texture="https://i.imgur.com/yoEzbtg.jpg", emissive=True)
 earth = sphere(pos=vector(real_earth_x, 0, 0), radius =  sun.radius*0.4, texture=textures.earth, make_trail = True)
