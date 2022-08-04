@@ -34,7 +34,6 @@ saturn_w = 1.6949443e-4
 uranus_w = 1.0212128e-4
 neptune_w = 1.0884574e-4
 
-
 #The radii are VERY not to scale, just there so you can see them
 #Apologies to Jupiter, Uranus, + Neptune for not adding their rings
 #And the light source is all wrong for the shiny spots on the planets
@@ -50,7 +49,6 @@ saturn = sphere(pos=vector(real_saturn_x,0,0), radius=jupiter.radius*0.99999, te
 saturn_rings = ring(pos=saturn.pos, radius=saturn.radius*2, thickness=5e8, axis=vector(-1, 4, 0.3), color=vector(0.69,0.66,0.42))  #VPython only has a torus, not a flat donut. And Saturn's rings aren't actually one solid body.
 uranus = sphere(pos=vector(real_uranus_x,0,0), radius=jupiter.radius*0.8, texture="https://i.imgur.com/2kZNvFw.jpeg", make_trail = True)
 neptune = sphere(pos=vector(real_neptune_x,0,0), radius=jupiter.radius*0.85, texture="https://i.imgur.com/lyLpoMk.jpeg", make_trail = True)
-
 
 #Rotating the bodies, just for fun
 earth.rotate(angle=pi/2,axis=vector(1,0,0),origin=earth.pos)
@@ -105,8 +103,6 @@ while 1==1:
     saturn_rings.rotate = saturn.rotate   #They actually have different speeds depending on how close each "layer" is to Saturn, but whatever
     uranus.rotate(angle=uranus_w*dt, axis=vector(1,0,0), origin=uranus.pos)
     neptune.rotate(angle=neptune_w*dt, axis=vector(1,0,0), origin =neptune.pos)
-
-    
     
     #Distance vectors
     dist_e = earth.pos-sun.pos
@@ -185,7 +181,6 @@ while 1==1:
     gnsa = ((-1*grav_const*neptune_mass*saturn_mass)*(norm(dist_ns)))/(mag(dist_ns)**2)  #Neptune by Saturn
     gnu = ((-1*grav_const*neptune_mass*uranus_mass)*(norm(dist_nu)))/(mag(dist_nu)**2)   #Neptune by Uranus
     
-    
     #Newton's 3rd Law
     gun = -gnu    #Uranus by Neptune
     gsan = -gnsa   #Saturn by Neptune
@@ -247,17 +242,14 @@ while 1==1:
     neptune.pos = neptune.pos+neptune.p*dt/neptune_mass
     
     t=t+dt
-    
-    
+ 
     #I didn't include stuff like asteroid belts, so orbital periods from Mars-onward are pretty inaccurate.
-    
     if t==7.6e6:
         print("1 Mercury year has passed. ")
         
     if t==19.4e6:
         print("1 Venus year has passed. ")
-            
-    
+           
     if t==5.919e7:
         print("1 Mars year has passed. ")
     
