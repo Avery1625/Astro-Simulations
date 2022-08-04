@@ -1,0 +1,276 @@
+Web VPython 3.2
+
+#Defining the constants
+real_earth_x = 1.51907146e11 #m, the current distance of Earth to Sun (July 2022), not an AU, which is the average
+real_mars_x = 2.0937e11 #m, also current
+real_mercury_x = 5.7064e10 #m
+real_venus_x = 1.0786e11 #m
+real_jupiter_x = 7.4218e11 #m
+real_saturn_x = 1.4748e12 #m
+real_uranus_x = 2.9451e12 #m
+real_neptune_x = 4.4741e12 #m
+
+mars_mass=6.39e23 #kg
+earth_mass = 5.97e24   #Kg
+mercury_mass = 3.285e23 #kg
+venus_mass=4.86732e24   #kg
+jupiter_mass = 1.899e27  #kg
+saturn_mass = 5.683e26    #kg
+uranus_mass = 8.681e25      #kg
+neptune_mass = 1.024e26    #kg
+sun_mass=2e30              #Kg
+
+grav_const = 6.67e-11 #m^3/kg/s^2
+t=0
+dt=100 #Time increment
+
+earth_w=7.3e-5  #rotational velocity at equator, rad/s
+sun_w = 2.8748e-6
+mars_w = 7.091363e-5
+mercury_w = 1.21345e-6
+venus_w = 2.99268152e-7
+jupiter_w = 1.76e-4
+saturn_w = 1.6949443e-4
+uranus_w = 1.0212128e-4
+neptune_w = 1.0884574e-4
+
+
+#The radii are VERY not to scale, just there so you can see them
+#Apologies to Jupiter, Uranus, + Neptune for not adding their rings
+#And the light source is all wrong for the shiny spots on the planets
+#Bodies
+sun = sphere(pos=vector(0,0,0), radius = 15e9, texture="https://i.imgur.com/yoEzbtg.jpg", emissive=True)
+earth = sphere(pos=vector(real_earth_x, 0, 0), radius =  sun.radius*0.4, texture=textures.earth, make_trail = True)
+mars = sphere(pos=vector(real_mars_x, 0, 0), radius =  sun.radius*0.35, texture="https://i.imgur.com/Mwsa16j.jpeg", make_trail = True)
+mercury=sphere(pos=vector(real_mercury_x, 0, 0), radius =  sun.radius*0.3, texture="https://i.imgur.com/YttpWJD.jpeg", make_trail = True)
+venus=sphere(pos=vector(real_venus_x, 0, 0), radius =  sun.radius*0.39999, texture="https://i.imgur.com/7VTEX2w.jpeg", make_trail = True)
+jupiter=sphere(pos=vector(real_jupiter_x, 0, 0), radius =  sun.radius*0.7, texture="https://i.imgur.com/RMMtt0K.jpeg", make_trail = True)
+saturn = sphere(pos=vector(real_saturn_x,0,0), radius=jupiter.radius*0.99999, texture="https://i.imgur.com/02Kt4gy.jpeg", make_trail = True)
+saturn_rings = ring(pos=saturn.pos, radius=saturn.radius*2, thickness=5e8, axis=vector(-1, 4, 0.3), color=vector(0.69,0.66,0.42))  #VPython only has a torus, not a flat donut. And Saturn's rings aren't actually one solid body.
+uranus = sphere(pos=vector(real_uranus_x,0,0), radius=jupiter.radius*0.8, texture="https://i.imgur.com/2kZNvFw.jpeg", make_trail = True)
+neptune = sphere(pos=vector(real_neptune_x,0,0), radius=jupiter.radius*0.85, texture="https://i.imgur.com/lyLpoMk.jpeg", make_trail = True)
+
+
+#Rotating the bodies, just for fun
+earth.rotate(angle=pi/2,axis=vector(1,0,0),origin=earth.pos)
+sun.rotate(angle=pi/2,axis=vector(1,0,0),origin=sun.pos)  #This isn't really accurate, different sections rotate at different speeds on the Sun
+mars.rotate(angle=pi/2,axis=vector(1,0,0),origin=mars.pos)
+mercury.rotate(angle=pi/2,axis=vector(1,0,0),origin=mercury.pos)
+venus.rotate(angle=3*pi/2,axis=vector(1,0,0),origin=venus.pos) #Venus rotates clockwise
+jupiter.rotate(angle=pi/2, axis=vector(1,0,0), origin=jupiter.pos)
+saturn.rotate(angle=pi/2, axis=vector(1,0,0), origin=saturn.pos)
+uranus.rotate(angle=pi,axis=vector(1,0,0),origin=uranus.pos)  #Uranus rotates on its side
+neptune.rotate(angle=pi/2, axis=vector(1,0,0), origin =neptune.pos)
+
+#velocity + momentum
+ve = (grav_const*sun_mass/real_earth_x)**(1/2)
+earth.p = earth_mass*ve*vector(0,1,0)
+
+vma = (grav_const*sun_mass/real_mars_x)**(1/2)
+mars.p = mars_mass*vma*vector(0,1,0)
+
+vme = (grav_const*sun_mass/real_mercury_x)**(1/2)
+mercury.p = mercury_mass*vme*vector(0,1,0)
+
+vv = (grav_const*sun_mass/real_venus_x)**(1/2)
+venus.p = venus_mass*vv*vector(0,1,0)
+
+vj=(grav_const*sun_mass/real_jupiter_x)**(1/2)
+jupiter.p = jupiter_mass*vj*vector(0,1,0)
+
+vs=(grav_const*sun_mass/real_saturn_x)**(1/2)
+saturn.p = saturn_mass*vs*vector(0,1,0)
+
+vu = (grav_const*sun_mass/real_uranus_x)**(1/2)
+uranus.p = uranus_mass*vu*vector(0,1,0)
+
+vn = (grav_const*sun_mass/real_neptune_x)**(1/2)
+neptune.p = neptune_mass*vn*vector(0,1,0)
+
+sun.p = -(earth.p) -(mars.p) -(mercury.p) -(venus.p) -(jupiter.p) -(saturn.p) -(uranus.p) -(neptune.p)
+
+#Animation
+while 1==1:
+    rate(1e7)
+    
+    #rotation
+    earth.rotate(angle=earth_w*dt,axis=vector(1,0,0),origin=earth.pos)
+    sun.rotate(angle=sun_w*dt,axis=vector(1,0,0),origin=sun.pos)
+    mars.rotate(angle=mars_w*dt,axis=vector(1,0,0),origin=mars.pos)
+    mercury.rotate(angle=mercury_w*dt,axis=vector(1,0,0),origin=mercury.pos)
+    venus.rotate(angle=venus_w*dt,axis=vector(1,0,0),origin=venus.pos)
+    jupiter.rotate(angle=jupiter_w*dt,axis=vector(1,0,0),origin=jupiter.pos)
+    saturn.rotate(angle=saturn_w*dt, axis=vector(1,0,0), origin=saturn.pos)
+    saturn_rings.rotate = saturn.rotate   #They actually have different speeds depending on how close each "layer" is to Saturn, but whatever
+    uranus.rotate(angle=uranus_w*dt, axis=vector(1,0,0), origin=uranus.pos)
+    neptune.rotate(angle=neptune_w*dt, axis=vector(1,0,0), origin =neptune.pos)
+
+    
+    
+    #Distance vectors
+    dist_e = earth.pos-sun.pos
+    dist_ma = mars.pos-sun.pos
+    dist_mae = mars.pos-earth.pos
+    dist_me = mercury.pos-sun.pos
+    dist_eme = earth.pos-mercury.pos
+    dist_mame = mars.pos-mercury.pos
+    dist_v = venus.pos-sun.pos
+    dist_ev = earth.pos-venus.pos
+    dist_vme = venus.pos-mercury.pos
+    dist_mav = mars.pos-venus.pos
+    dist_j=jupiter.pos-sun.pos
+    dist_jme = jupiter.pos-mercury.pos
+    dist_jv = jupiter.pos-venus.pos
+    dist_je = jupiter.pos-earth.pos
+    dist_jma = jupiter.pos-mars.pos
+    dist_s = saturn.pos-sun.pos
+    dist_sme = saturn.pos-mercury.pos
+    dist_sv = saturn.pos-venus.pos
+    dist_se = saturn.pos-earth.pos
+    dist_sma = saturn.pos - mars.pos
+    dist_sj = saturn.pos-jupiter.pos
+    dist_u = uranus.pos-sun.pos
+    dist_ume = uranus.pos-mercury.pos
+    dist_uv = uranus.pos-venus.pos
+    dist_ue = uranus.pos - earth.pos
+    dist_uma = uranus.pos-mars.pos
+    dist_uj = uranus.pos - jupiter.pos
+    dist_us = uranus.pos-saturn.pos
+    dist_n = neptune.pos-sun.pos
+    dist_nme = neptune.pos-mercury.pos
+    dist_nv = neptune.pos-venus.pos
+    dist_ne = neptune.pos-earth.pos
+    dist_nma = neptune.pos-mars.pos
+    dist_nj = neptune.pos-jupiter.pos
+    dist_ns = neptune.pos-saturn.pos
+    dist_nu = neptune.pos-uranus.pos
+  
+    #Gravitational attraction...there was probably a more efficient way to do this but oh well.
+    ##Newton's Law of Universal Gravitation
+    gfe=(-1*grav_const*sun_mass*earth_mass*(norm(dist_e)))/(mag(dist_e)**2) #Earth by Sun
+    gsma=((-1*grav_const*sun_mass*mars_mass)*(norm(dist_ma)))/(mag(dist_ma)**2) #Mars by Sun
+    gmae =((-1*grav_const*earth_mass*mars_mass)*(norm(dist_mae)))/(mag(dist_mae)**2) #Mars by Earth
+    gsme=((-1*grav_const*sun_mass*mercury_mass)*(norm(dist_me)))/(mag(dist_me)**2) #Mercury by Sun
+    geme=((-1*grav_const*earth_mass*mercury_mass)*(norm(dist_eme)))/(mag(dist_eme)**2) #Earth by Mercury
+    gmame = ((-1*grav_const*mars_mass*mercury_mass)*(norm(dist_mame)))/(mag(dist_mame)**2) #Mars by Mercury
+    gsv=((-1*grav_const*venus_mass*sun_mass)*(norm(dist_v)))/(mag(dist_v)**2) #Venus by Sun
+    gev=((-1*grav_const*venus_mass*earth_mass)*(norm(dist_ev)))/(mag(dist_ev)**2) #Earth by Venus
+    gvme=((-1*grav_const*venus_mass*mercury_mass)*(norm(dist_vme)))/(mag(dist_vme)**2) #Venus by Mercury
+    gmav=((-1*grav_const*mars_mass*venus_mass)*(norm(dist_mav)))/(mag(dist_mav)**2) #Mars by Venus
+    gsj = ((-1*grav_const*jupiter_mass*sun_mass)*(norm(dist_j)))/(mag(dist_j)**2) #Jupiter by Sun
+    gjme=((-1*grav_const*mercury_mass*jupiter_mass)*(norm(dist_jme)))/(mag(dist_jme)**2) #Jupiter by Mercury
+    gjv = ((-1*grav_const*jupiter_mass*venus_mass)*(norm(dist_jv)))/(mag(dist_jv)**2) #Jupiter by Venus
+    gje=((-1*grav_const*earth_mass*jupiter_mass)*(norm(dist_je)))/(mag(dist_je)**2) #Jupiter by Earth
+    gjma=((-1*grav_const*mars_mass*jupiter_mass)*(norm(dist_jma)))/(mag(dist_jma)**2) #Jupiter by Mars
+    gss = ((-1*grav_const*saturn_mass*sun_mass)*(norm(dist_s)))/(mag(dist_s)**2) #Saturn by Sun
+    gsame = ((-1*grav_const*saturn_mass*mercury_mass)*(norm(dist_sme)))/(mag(dist_sme)**2)  #Saturn by Mercury
+    gsav = ((-1*grav_const*saturn_mass*venus_mass)*(norm(dist_sv)))/(mag(dist_sv)**2)  #Saturn by Venus
+    gsae = ((-1*grav_const*saturn_mass*earth_mass)*(norm(dist_se)))/(mag(dist_se)**2)   #Saturn by Earth
+    gsama = ((-1*grav_const*saturn_mass*mars_mass)*(norm(dist_sma)))/(mag(dist_sma)**2) #Saturn by Mars
+    gsaj = ((-1*grav_const*saturn_mass*jupiter_mass)*(norm(dist_sj)))/(mag(dist_sj)**2) #Saturn by Jupiter
+    gsu = ((-1*grav_const*uranus_mass*sun_mass)*(norm(dist_u)))/(mag(dist_u)**2)   #Uranus by Sun
+    gume = ((-1*grav_const*uranus_mass*mercury_mass)*(norm(dist_ume)))/(mag(dist_ume)**2) #Uranus by Mercury
+    guv = ((-1*grav_const*uranus_mass*venus_mass)*(norm(dist_uv)))/(mag(dist_uv)**2)  #Uranus by Venus
+    gue = ((-1*grav_const*uranus_mass*earth_mass)*(norm(dist_ue)))/(mag(dist_ue)**2)   #Uranus by Earth
+    guma = ((-1*grav_const*uranus_mass*mars_mass)*(norm(dist_uma)))/(mag(dist_uma)**2)  #Uranus by Mars
+    guj = ((-1*grav_const*uranus_mass*jupiter_mass)*(norm(dist_uj)))/(mag(dist_uj)**2)   #Uranus by Jupiter
+    gusa = ((-1*grav_const*uranus_mass*saturn_mass)*(norm(dist_us)))/(mag(dist_us)**2)   #Uranus by Saturn
+    gn = ((-1*grav_const*neptune_mass*sun_mass)*(norm(dist_n)))/(mag(dist_n)**2)  #Neptune by Sun
+    gnme = ((-1*grav_const*neptune_mass*mercury_mass)*(norm(dist_nme)))/(mag(dist_nme)**2)  #Neptune by Mercury
+    gnv = ((-1*grav_const*neptune_mass*venus_mass)*(norm(dist_nv)))/(mag(dist_nv)**2)   #Neptune by Venus
+    gne = ((-1*grav_const*neptune_mass*earth_mass)*(norm(dist_ne)))/(mag(dist_ne)**2)   #Neptune by Earth
+    gnma = ((-1*grav_const*neptune_mass*mars_mass)*(norm(dist_nma)))/(mag(dist_nma)**2)  #Neptune by Mars
+    gnj = ((-1*grav_const*neptune_mass*jupiter_mass)*(norm(dist_nj)))/(mag(dist_nj)**2)   #Neptune by Jupiter
+    gnsa = ((-1*grav_const*neptune_mass*saturn_mass)*(norm(dist_ns)))/(mag(dist_ns)**2)  #Neptune by Saturn
+    gnu = ((-1*grav_const*neptune_mass*uranus_mass)*(norm(dist_nu)))/(mag(dist_nu)**2)   #Neptune by Uranus
+    
+    
+    #Newton's 3rd Law
+    gun = -gnu    #Uranus by Neptune
+    gsan = -gnsa   #Saturn by Neptune
+    gjn = -gnj   #Jupiter by Neptune
+    gman = -gnma   #Mars by Neptune
+    gen = -gne    #Earth by Neptune
+    gvn = -gnv    #Venus by Neptune
+    gmen = -gnme   #Mercury by Neptune
+    gsau = -gusa     #Saturn by Uranus  
+    gju = -guj     #Jupiter by Uranus
+    gmau = -guma    #Mars by Uranus
+    geu = -gue    #Earth by Uranus
+    gvu = -guv   #Venus by Uranus
+    gmeu = -gume   #Mercury by Uranus
+    gjs = -gsaj  #Jupiter by Saturn
+    gmas = -gsama #Mars by Saturn
+    ges=-gsae  #Earth by Saturn
+    gvs = -gsav  #Venus by Saturn
+    gmes = -gsame  #Mercury by Saturn
+    gmaj = -gjma #Mars by Jupiter
+    gej = -gje #Earth by Jupiter
+    gvj = -gjv #Venus by Jupiter
+    gmej = -gjme #Mercury by Jupiter
+    gvma = -gmav #Venus by Mars
+    gmev=-gvme #Mercury by Venus
+    gve=-gev #Venus by Earth
+    gmema = -gmame #Mercury by Mars
+    gmee = -geme #Mercury by Earth
+    gema = -gmae #Earth by Mars
+    gfs = -gfe -gsma -gsme -gsv -gsj -gss -gsu -gn  #Sun by planets, probably should have used this format for the other bodies 
+    
+    #Change in momentum + position
+    sun.p = sun.p + gfs*dt
+    sun.pos = sun.pos + sun.p*dt/sun_mass 
+    
+    earth.p = earth.p + gfe*dt + gema*dt +geme*dt +gev*dt+gej*dt+ges*dt+ geu*dt +gen*dt
+    earth.pos = earth.pos + earth.p*dt/earth_mass
+    
+    mars.p=mars.p+gsma*dt+gmae*dt+gmame*dt+gmav*dt+gmaj*dt+gmas*dt+gmau*dt + gman*dt
+    mars.pos = mars.pos + mars.p*dt/mars_mass
+    
+    mercury.p=mercury.p+gsme*dt+gmee*dt+gmema*dt+gmev*dt+gmej*dt+gmes*dt + gmeu*dt + gmen*dt
+    mercury.pos = mercury.pos + mercury.p*dt/mercury_mass
+    
+    venus.p = venus.p + gsv*dt + gvma*dt +gvme*dt +gve*dt+gvj*dt+gvs*dt+gvu*dt+gvn*dt
+    venus.pos = venus.pos+venus.p*dt/venus_mass
+    
+    jupiter.p = jupiter.p + gsj*dt + gjme*dt+gjv*dt+gje*dt+gjma*dt+gjs*dt+gju*dt+gjn*dt
+    jupiter.pos = jupiter.pos+jupiter.p*dt/jupiter_mass
+    
+    saturn.p = saturn.p + gss*dt +gsame*dt+ gsav*dt + gsae*dt + gsama*dt + gsaj*dt+gsau*dt + gsan*dt
+    saturn.pos = saturn.pos+saturn.p*dt/saturn_mass
+    saturn_rings.pos = saturn.pos
+    
+    uranus.p = uranus.p +gsu*dt + gume*dt + guv*dt + gue*dt+guma*dt + guj*dt + gusa*dt + gun*dt
+    uranus.pos = uranus.pos+uranus.p*dt/uranus_mass
+    
+    neptune.p = neptune.p + gn*dt + gnme*dt + gnv*dt + gne*dt + gnma*dt + gnj*dt + gnsa*dt + gnu*dt
+    neptune.pos = neptune.pos+neptune.p*dt/neptune_mass
+    
+    t=t+dt
+    
+    
+    #I didn't include stuff like asteroid belts, so orbital periods from Mars-onward are pretty inaccurate.
+    
+    if t==7.6e6:
+        print("1 Mercury year has passed. ")
+        
+    if t==19.4e6:
+        print("1 Venus year has passed. ")
+            
+    
+    if t==5.919e7:
+        print("1 Mars year has passed. ")
+    
+    if t==3.156e+7:
+        print("1 Earth year has passed. ")
+        
+    if t==370e6:
+        print("1 Jupiter year has passed. ")
+        
+    if t==9.29e+8:
+        print("1 Saturn year has passed. ")
+        
+    if t == 2.7e9:
+        print("1 Uranus year has passed. ")  
+        
+    if t==5.2e9:
+        print("1 Neptune year has passed. ")
