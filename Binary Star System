@@ -1,0 +1,47 @@
+Web VPython 3.2
+
+sun_radius = 6.9634e8     #meters
+G = 6.6743e-11     #m^3/kg/s^2
+sirius_a_mass = 3.978e30    #kg
+sirius_b_mass = 2.025e30      #kg
+dist = 2.992e12   #average distance
+t=0
+dt=5e4
+T = 1.578e9    #Orbital period
+
+sirius_a = sphere(pos=vector(0,0,0), color=color.blue, make_trail=True, radius=70*sun_radius)
+sirius_b = sphere(pos=vector(dist,0,0), color=vector(0.89, 1.34, 2.29), make_trail=True, trail_type="points", radius = 60*sun_radius) #The radii aren't accurate, just so it's visible
+
+cen_mass = ((sirius_a_mass*sirius_a.pos)+(sirius_b_mass*sirius_b.pos))/(sirius_a_mass+sirius_b_mass)  #Their barycenter
+barycenter = sphere(pos=vector(cen_mass), radius = sirius_a.radius)
+
+r=sirius_b.pos - sirius_a.pos     #distance between the two stars, as a vector
+
+ra=dist*(sirius_b_mass/(sirius_a_mass+sirius_b_mass))
+rb=dist*(sirius_a_mass/(sirius_a_mass+sirius_b_mass))
+
+va=sqrt(G*ra*sirius_b_mass/(dist**2))
+
+a_p = va*vector(0,1,0)*sirius_a_mass
+
+print(va)
+
+vb=sqrt(G*rb*sirius_a_mass/(dist**2))     #Just for fun
+
+print(vb)
+
+#b_p=vb*vector(0,1,0)*sirius_b_mass
+b_p=-a_p           #Conservation of angular momentum  - if you plug it into a calculator the previous formula is indeed equal to -a_p
+
+while 1==1:
+    rate(5e5)
+    r=sirius_b.pos - sirius_a.pos  
+    F = (G*sirius_a_mass*sirius_b_mass*norm(r)/mag(r)**2)
+    a_p = a_p + F*dt
+    b_p = b_p - F*dt
+    sirius_a.pos = sirius_a.pos + a_p*dt/sirius_a_mass
+    sirius_b.pos = sirius_b.pos + b_p*dt/sirius_b_mass
+    t=t+dt
+    if t==T:
+        print("50 Earth years have passed, and the system has completed one orbital period")
+        
