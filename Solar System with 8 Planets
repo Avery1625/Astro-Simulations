@@ -22,7 +22,7 @@ sun_mass=2e30              #Kg
 
 grav_const = 6.67e-11 #m^3/kg/s^2
 t=0
-dt=100 #Time increment
+dt=5e2 #Time increment
 
 earth_w=7.3e-5  #rotational velocity at equator, rad/s
 sun_w = 2.8748e-6
@@ -35,9 +35,8 @@ uranus_w = 1.0212128e-4
 neptune_w = 1.0884574e-4
 
 #The radii are VERY not to scale, just there so you can see them
-#Apologies to Jupiter, Uranus, + Neptune for not adding their rings
+#Apologies to Jupiter, Uranus, + Neptune for not adding their lil rings
 #And the light source is all wrong for the shiny spots on the planets
-#And obviously the planets don't start out perfectly aligned on the x-axis, and their orbital planes are inclined, but I kept it this way for ease of viewing
 #Bodies
 sun = sphere(pos=vector(0,0,0), radius = 15e9, texture="https://i.imgur.com/yoEzbtg.jpg", emissive=True)
 earth = sphere(pos=vector(real_earth_x, 0, 0), radius =  sun.radius*0.4, texture=textures.earth, make_trail = True)
@@ -58,10 +57,10 @@ mercury.rotate(angle=pi/2,axis=vector(1,0,0),origin=mercury.pos)
 venus.rotate(angle=3*pi/2,axis=vector(1,0,0),origin=venus.pos) #Venus rotates clockwise
 jupiter.rotate(angle=pi/2, axis=vector(1,0,0), origin=jupiter.pos)
 saturn.rotate(angle=pi/2, axis=vector(1,0,0), origin=saturn.pos)
-uranus.rotate(angle=pi,axis=vector(1,0,0),origin=uranus.pos)  #Uranus rotates on its side
+uranus.rotate(angle=pi,axis=vector(0,1,0),origin=uranus.pos)  #Uranus rotates on its side
 neptune.rotate(angle=pi/2, axis=vector(1,0,0), origin =neptune.pos)
 
-#velocity + momentum
+#velocity + momentum - of course the planets orbit around their barycenter with the Sun, but it doesn't make a significant difference in the program
 ve = (grav_const*sun_mass/real_earth_x)**(1/2)
 earth.p = earth_mass*ve*vector(0,1,0)
 
@@ -102,7 +101,7 @@ while 1==1:
     saturn.rotate(angle=saturn_w*dt, axis=vector(1,0,0), origin=saturn.pos)
     saturn_rings.rotate = saturn.rotate   #They actually have different speeds depending on how close each "layer" is to Saturn, but whatever
     uranus.rotate(angle=uranus_w*dt, axis=vector(1,0,0), origin=uranus.pos)
-    neptune.rotate(angle=neptune_w*dt, axis=vector(1,0,0), origin =neptune.pos)
+    neptune.rotate(angle=neptune_w*dt, axis=vector(1,0,0), origin=neptune.pos)
     
     #Distance vectors
     dist_e = earth.pos-sun.pos
@@ -242,14 +241,15 @@ while 1==1:
     neptune.pos = neptune.pos+neptune.p*dt/neptune_mass
     
     t=t+dt
- 
+    
     #I didn't include stuff like asteroid belts, so orbital periods from Mars-onward are pretty inaccurate.
+    
     if t==7.6e6:
         print("1 Mercury year has passed. ")
         
     if t==19.4e6:
         print("1 Venus year has passed. ")
-           
+        
     if t==5.919e7:
         print("1 Mars year has passed. ")
     
@@ -267,3 +267,4 @@ while 1==1:
         
     if t==5.2e9:
         print("1 Neptune year has passed. ")
+        
