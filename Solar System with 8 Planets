@@ -54,10 +54,10 @@ earth.rotate(angle=pi/2,axis=vector(1,0,0),origin=earth.pos)
 sun.rotate(angle=pi/2,axis=vector(1,0,0),origin=sun.pos)  #This isn't really accurate, different sections rotate at different speeds on the Sun
 mars.rotate(angle=pi/2,axis=vector(1,0,0),origin=mars.pos)
 mercury.rotate(angle=pi/2,axis=vector(1,0,0),origin=mercury.pos)
-venus.rotate(angle=3*pi/2,axis=vector(1,0,0),origin=venus.pos) #Venus rotates clockwise
+venus.rotate(angle=3*pi/2,axis=vector(-1,0,0),origin=venus.pos) #Venus rotates clockwise
 jupiter.rotate(angle=pi/2, axis=vector(1,0,0), origin=jupiter.pos)
 saturn.rotate(angle=pi/2, axis=vector(1,0,0), origin=saturn.pos)
-uranus.rotate(angle=pi,axis=vector(0,1,0),origin=uranus.pos)  #Uranus rotates on its side
+uranus.rotate(angle=pi/2,axis=vector(0,1,0),origin=uranus.pos)  #Uranus rotates on its side
 neptune.rotate(angle=pi/2, axis=vector(1,0,0), origin =neptune.pos)
 
 #velocity + momentum - of course the planets orbit around their barycenter with the Sun, but it doesn't make a significant difference in the program
@@ -96,12 +96,12 @@ while 1==1:
     sun.rotate(angle=sun_w*dt,axis=vector(1,0,0),origin=sun.pos)
     mars.rotate(angle=mars_w*dt,axis=vector(1,0,0),origin=mars.pos)
     mercury.rotate(angle=mercury_w*dt,axis=vector(1,0,0),origin=mercury.pos)
-    venus.rotate(angle=venus_w*dt,axis=vector(1,0,0),origin=venus.pos)
+    venus.rotate(angle=venus_w*dt,axis=vector(-1,0,0),origin=venus.pos)
     jupiter.rotate(angle=jupiter_w*dt,axis=vector(1,0,0),origin=jupiter.pos)
     saturn.rotate(angle=saturn_w*dt, axis=vector(1,0,0), origin=saturn.pos)
     saturn_rings.rotate = saturn.rotate   #They actually have different speeds depending on how close each "layer" is to Saturn, but whatever
-    uranus.rotate(angle=uranus_w*dt, axis=vector(1,0,0), origin=uranus.pos)
-    neptune.rotate(angle=neptune_w*dt, axis=vector(1,0,0), origin=neptune.pos)
+    uranus.rotate(angle=uranus_w*dt, axis=vector(0,1,0), origin=uranus.pos)
+    neptune.rotate(angle=neptune_w*dt, axis=vector(1,0,0), origin =neptune.pos)
     
     #Distance vectors
     dist_e = earth.pos-sun.pos
