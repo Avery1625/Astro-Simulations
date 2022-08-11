@@ -1,0 +1,45 @@
+Web VPython 3.2
+#Constants
+earth_mass = 5.972e24   #kg
+moon_mass = 7.348e22     #kg
+G = 6.6743e-11    #m^3/kg/s^2
+dist = 3.60748e8    #m, current distance, not average
+t=0
+dt=100
+T=2.326e+6
+earth_w=7.3e-5  #rotational velocity at equator, rad/s
+moon_w = 2.67e-6
+
+earth = sphere(pos=vector(0,0,0), texture=textures.earth,radius=6.371e6, opacity=0.5, make_trail=True)   #The opacity is so we can see the barycenter
+moon= sphere(pos=vector(dist, 0,0), texture="https://i.imgur.com/0lAj5pJ.jpeg", make_trail=True, radius=3.7374e6)  #The radius is not to scale, just for ease of viewing
+
+#Calculating the barycenter
+cen_mass = ((earth_mass*earth.pos)+(moon_mass*moon.pos))/(moon_mass+earth_mass)
+bary_pos = mag(cen_mass)
+barycenter = sphere(pos=cen_mass, radius=earth.radius*0.2, color=color.red)
+
+#Rotating the bodies
+earth.rotate(angle=pi/2, axis=vector(1,0,0), origin=earth.pos)
+moon.rotate(angle=pi/2, axis=vector(-1,0,0), origin=moon.pos)
+
+#Velocity + momentum
+rm=dist*(earth_mass/(moon_mass+earth_mass))   
+vm=sqrt(G*rm*earth_mass/(dist**2))
+m_p=vm*vector(0,1,0)*moon_mass
+e_p=-m_p
+
+while 1==1:
+    rate(9e3)     #Speed of the animation
+    earth.rotate(angle=earth_w*dt, axis=vector(1,0,0), origin=earth.pos)   #rotation
+    moon.rotate(angle=moon_w*dt, axis=vector(-1,0,0), origin=moon.pos)
+    r=earth.pos-moon.pos
+    F= (G*moon_mass*earth_mass*norm(r)/mag(r)**2)   #Gravitational attraction
+    m_p = m_p+F*dt     #Updating momentum
+    e_p = e_p-F*dt
+    #Updating position
+    moon.pos = moon.pos+m_p*dt/moon_mass     
+    earth.pos = earth.pos + e_p*dt/earth_mass
+    cen_mass = ((earth_mass*earth.pos)+(moon_mass*moon.pos))/(moon_mass+earth_mass)
+    bary_pos = mag(cen_mass)
+    barycenter = sphere(pos=cen_mass, radius=earth.radius*0.2, color=color.red)
+    t+=dt   #updating time
