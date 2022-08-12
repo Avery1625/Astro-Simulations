@@ -43,3 +43,5 @@ while 1==1:
     bary_pos = mag(cen_mass)
     barycenter = sphere(pos=cen_mass, radius=earth.radius*0.2, color=color.red)
     t+=dt   #updating time
+    if t==T:
+        print("27 Earth days have passed, and the Moon has completed 1 orbital period. ")
