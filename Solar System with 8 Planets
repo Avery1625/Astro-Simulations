@@ -1,5 +1,4 @@
 Web VPython 3.2
-
 #Defining the constants
 real_earth_x = 1.51907146e11 #m, the current distance of Earth to Sun (July 2022), not an AU, which is the average
 real_mars_x = 2.0937e11 #m, also current
@@ -10,6 +9,7 @@ real_saturn_x = 1.4748e12 #m
 real_uranus_x = 2.9451e12 #m
 real_neptune_x = 4.4741e12 #m
 
+
 mars_mass=6.39e23 #kg
 earth_mass = 5.97e24   #Kg
 mercury_mass = 3.285e23 #kg
@@ -19,6 +19,7 @@ saturn_mass = 5.683e26    #kg
 uranus_mass = 8.681e25      #kg
 neptune_mass = 1.024e26    #kg
 sun_mass=2e30              #Kg
+
 
 grav_const = 6.67e-11 #m^3/kg/s^2
 t=0
@@ -48,6 +49,7 @@ saturn = sphere(pos=vector(real_saturn_x,0,0), radius=jupiter.radius*0.99999, te
 saturn_rings = ring(pos=saturn.pos, radius=saturn.radius*2, thickness=5e8, axis=vector(-1, 4, 0.3), color=vector(0.69,0.66,0.42))  #VPython only has a torus, not a flat donut. And Saturn's rings aren't actually one solid body.
 uranus = sphere(pos=vector(real_uranus_x,0,0), radius=jupiter.radius*0.8, texture="https://i.imgur.com/2kZNvFw.jpeg", make_trail = True)
 neptune = sphere(pos=vector(real_neptune_x,0,0), radius=jupiter.radius*0.85, texture="https://i.imgur.com/lyLpoMk.jpeg", make_trail = True)
+
 
 #Rotating the bodies, just for fun
 earth.rotate(angle=pi/2,axis=vector(1,0,0),origin=earth.pos)
@@ -140,9 +142,9 @@ while 1==1:
     dist_nj = neptune.pos-jupiter.pos
     dist_ns = neptune.pos-saturn.pos
     dist_nu = neptune.pos-uranus.pos
-  
+
     #Gravitational attraction...there was probably a more efficient way to do this but oh well.
-    ##Newton's Law of Universal Gravitation
+    #Newton's Law of Universal Gravitation
     gfe=(-1*grav_const*sun_mass*earth_mass*(norm(dist_e)))/(mag(dist_e)**2) #Earth by Sun
     gsma=((-1*grav_const*sun_mass*mars_mass)*(norm(dist_ma)))/(mag(dist_ma)**2) #Mars by Sun
     gmae =((-1*grav_const*earth_mass*mars_mass)*(norm(dist_mae)))/(mag(dist_mae)**2) #Mars by Earth
@@ -239,11 +241,7 @@ while 1==1:
     
     neptune.p = neptune.p + gn*dt + gnme*dt + gnv*dt + gne*dt + gnma*dt + gnj*dt + gnsa*dt + gnu*dt
     neptune.pos = neptune.pos+neptune.p*dt/neptune_mass
-    
-    t=t+dt
-    
-    #I didn't include stuff like asteroid belts, so orbital periods from Mars-onward are pretty inaccurate.
-    
+        
     if t==7.6e6:
         print("1 Mercury year has passed. ")
         
@@ -267,4 +265,6 @@ while 1==1:
         
     if t==5.2e9:
         print("1 Neptune year has passed. ")
+        
+    t=t+dt
         
