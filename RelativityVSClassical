@@ -1,0 +1,18 @@
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+import numpy as np
+
+m=1    #kg
+c=300000 #km/s
+v = np.linspace(0, c-1, num=100)
+lorentz = 1/((1-(v**2/c**2))**(1/2))
+fig, ax = plt.subplots()
+newt_ke = 1/2*m*v**2
+einst_ke=m*c**2*(lorentz-1)
+ax.plot(v, newt_ke, label="Classical")
+ax.plot(v, einst_ke, label="Relativity")
+ax.set_title("Newton vs Einstein: Kinetic Energy")
+plt.ylabel('Kinetic Energy')
+plt.xlabel('Velocity, km/s')
+plt.show()
+ax.legend();
