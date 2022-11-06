@@ -1,0 +1,118 @@
+Web VPython 3.2
+#All neglecting air resistance
+ball=sphere(pos=vector(0,200,0), radius=30, color=color.blue, make_trail=True)
+g_earth=9.81 #m/s^2
+t=0
+G=6.67e-11 #m^3/kg/s^2
+from visual import *
+background = box(pos=vector(0,0,0), length=700, height=700)
+#Finally discovered the magic of arrays
+planets = ["mercury", "venus", "mars", "jupiter", "saturn", "uranus", "neptune"]
+planets.mass = [3.285e23, 4.86732e24, 6.4169e23, 1.89813e27, 5.683e26, 8.681e25,1.024e26]  #kg
+planets.rad = [2.4397e6,6.0518e6, 3.3895e6, 6.9911e7, 5.8232e7, 2.5362e7, 2.4622e7]  #m
+planets.g=[]  #m/s^2
+
+
+for j in planets.mass:
+    for k in planets.rad: 
+        if j==planets.mass[0]:
+            planets.g.append(G*j/(k**2))
+            break
+        elif j==planets.mass[1]:
+            k=planets.rad[1]
+            planets.g.append(G*j/(k**2))
+            break
+        elif j==planets.mass[2]:
+            k=planets.rad[2]            
+            planets.g.append(G*j/(k**2))
+            break
+        elif j==planets.mass[3]:
+            k=planets.rad[3]
+            planets.g.append(G*j/(k**2))  
+            break
+        elif j==planets.mass[4]:
+            k=planets.rad[4]
+            planets.g.append(G*j/(k**2)) 
+            break
+        elif j==planets.mass[5]:
+            k=planets.rad[5]
+            planets.g.append(G*j/(k**2))
+            break
+        elif j==planets.mass[6]:
+            k=planets.rad[6]
+            planets.g.append(G*j/(k**2)) 
+            break
+
+while 1==1:
+    rate(2)
+    #Mercury
+    while ball.pos.y>=0+ball.radius:
+        rate(2)
+        background.texture="https://i.imgur.com/YttpWJD.jpeg"
+        a=planets.g[0]
+        ball.pos.y+=1/2*-a*t**2
+        t+=1
+    t=0   
+    #Venus
+    background.texture="https://i.imgur.com/7VTEX2w.jpeg"
+    ball.pos.y=200
+    a=planets.g[1]
+    while ball.pos.y>=0+ball.radius:
+        rate(2)
+        ball.pos.y+=1/2*-a*t**2
+        t+=1
+    t=0    
+    ball.pos.y=200
+    a=g_earth
+    background.texture=textures.earth
+    #Earth
+    while ball.pos.y>=0+ball.radius:
+        rate(2)
+        ball.pos.y+=1/2*-a*t**2
+        t+=1
+    t=0    
+    background.texture="https://i.imgur.com/Mwsa16j.jpeg"    
+    ball.pos.y=200
+    a=planets.g[2]
+    #Mars
+    while ball.pos.y>=0+ball.radius:
+        rate(2)
+        ball.pos.y+=1/2*-a*t**2
+        t+=1
+    background.texture="https://i.imgur.com/RMMtt0K.jpeg"
+    t=0
+    ball.pos.y=200
+    a=planets.g[3]
+    #Jupiter
+    while ball.pos.y>=0+ball.radius:
+        rate(2)
+        ball.pos.y+=1/2*-a*t**2
+        t+=1
+    background.texture="https://i.imgur.com/02Kt4gy.jpeg"
+    t=0
+    ball.pos.y=200
+    a=planets.g[4]
+    #Saturn
+    while ball.pos.y>=0+ball.radius:
+        rate(2)
+        ball.pos.y+=1/2*-a*t**2
+        t+=1 
+    background.texture="https://i.imgur.com/2kZNvFw.jpeg"
+    t=0
+    ball.pos.y=200
+    a=planets.g[5]
+    #Uranus
+    while ball.pos.y>=0+ball.radius:
+        rate(2)
+        ball.pos.y+=1/2*-a*t**2
+        t+=1 
+    background.texture="https://i.imgur.com/lyLpoMk.jpeg"
+    t=0
+    ball.pos.y=200
+    a=planets.g[6]
+    #Neptune
+    while ball.pos.y>=0+ball.radius:
+        rate(2)
+        ball.pos.y+=1/2*-a*t**2
+        t+=1 
+    break    
