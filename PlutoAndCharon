@@ -1,0 +1,38 @@
+Web VPython 3.2
+G=6.6743e-11        #m^3/kg/s^2
+t=0    #s
+dt=1  #s
+dist=1.964e7 #m
+p_mass= 1.303e22 #kg
+c_mass = 1.586e21 #kg
+pluto_w=1.108e-5  #rad/s
+charon_w=3.795e-4 #rad/s
+T=550800 #orbital period, s
+
+pluto = sphere(pos=vector(0,0,0), radius=1.1833e6, make_trail=True, texture="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/5938ae9e-47de-424a-8836-f98e6658d37b/dcjk44z-9fa15d34-cee7-47b1-a497-f103d8df2454.jpg/v1/fill/w_1264,h_632,q_70,strp/pluto_texture_map__16k__by_askaniy_dcjk44z-pre.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9OTYwIiwicGF0aCI6IlwvZlwvNTkzOGFlOWUtNDdkZS00MjRhLTg4MzYtZjk4ZTY2NThkMzdiXC9kY2prNDR6LTlmYTE1ZDM0LWNlZTctNDdiMS1hNDk3LWYxMDNkOGRmMjQ1NC5qcGciLCJ3aWR0aCI6Ijw9MTkyMCJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.SFhvCES9SCvWvGQfo4nI-f0yK2c7e0CfmH_2trqSq5U")
+charon=sphere(pos=vector(dist,0,0), radius=pluto.radius*0.5, make_trail=True, texture="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/5938ae9e-47de-424a-8836-f98e6658d37b/dcltk1x-feb9e7cb-3654-4c3a-968a-1a105894a929.png/v1/fill/w_1264,h_632,q_70,strp/charon_true_color_texture_map_by_askaniy_dcltk1x-pre.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9ODAwIiwicGF0aCI6IlwvZlwvNTkzOGFlOWUtNDdkZS00MjRhLTg4MzYtZjk4ZTY2NThkMzdiXC9kY2x0azF4LWZlYjllN2NiLTM2NTQtNGMzYS05NjhhLTFhMTA1ODk0YTkyOS5wbmciLCJ3aWR0aCI6Ijw9MTYwMCJ9XV0sImF1ZCI6WyJ1cm46c2VydmljZTppbWFnZS5vcGVyYXRpb25zIl19.AKD3IH5NXoz1FUJP-661dvyfY2SPA2SJDu5OcMXaVgU")
+
+cen_mass=((p_mass*pluto.pos)+(c_mass*charon.pos))/(c_mass+p_mass)
+barycenter = sphere(pos=cen_mass, radius=pluto.radius*0.2, color=color.red)
+
+rp=dist*(c_mass/(p_mass+c_mass))
+
+vp=sqrt(G*rp*c_mass/dist**2)
+p_p=p_mass*vp*vector(0,1,0)
+c_p=-p_p
+
+while 1==1:
+    rate(1e8)
+    sep=charon.pos-pluto.pos
+    pluto.rotate(angle=pluto_w*dt, vector(1,0,0), origin=pluto.pos)
+    charon.rotate(angle=charon_w*dt, vector(1,0,0), origin=charon.pos)
+    Fg=(G*p_mass*c_mass*norm(sep)/(mag(sep))**2)
+    Fgc=-Fg
+    p_p+=Fg*dt
+    c_p+=Fgc*dt
+    pluto.pos+=p_p*dt/p_mass
+    charon.pos+=c_p*dt/c_mass
+    t+=dt
+    if t==T:
+        print("1 orbital period completed")
+    
